@@ -5,19 +5,21 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "0",
+    "hash" : "1290931614",
     "id" : "40B84B51",
-    "lastKnownWriteTime" : 1606841300,
-    "last_content_update" : 1606841300496,
+    "lastKnownWriteTime" : 1606852846,
+    "last_content_update" : 1606852846371,
     "path" : "~/Documents/GitHub/Modeling-Final/Modeling project.R",
     "project_path" : "Modeling project.R",
     "properties" : {
+        "cursorPosition" : "32,0",
+        "scrollLine" : "9",
         "tempName" : "Untitled1"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 1,
+    "relative_order" : 2,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"

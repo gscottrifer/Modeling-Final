@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1606848435831.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3885526472",
+    "id" : "B76D5E3B",
+    "lastKnownWriteTime" : 1606847668,
+    "last_content_update" : 1606847668,
+    "path" : "~/Documents/GitHub/fastnet/R/metric.cluster.global.R",
+    "project_path" : null,
+    "properties" : {
+        "cursorPosition" : "27,0",
+        "scrollLine" : "7"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
