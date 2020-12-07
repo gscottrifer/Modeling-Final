@@ -12,9 +12,9 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "90D9BFB8",
+        "cacheKey" : "1DA1E99B",
         "caption" : "initial_matrix",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=initial_matrix&cache_key=90D9BFB8",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=initial_matrix&cache_key=1DA1E99B",
         "displayedObservations" : "10",
         "environment" : "",
         "expression" : "initial_matrix",
@@ -26,7 +26,7 @@
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 13,
+    "relative_order" : 8,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_dataframe"

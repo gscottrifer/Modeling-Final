@@ -1,24 +1,24 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1606849430592.000,
+    "created" : 1607017394527.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3888007037",
-    "id" : "AE9D52FA",
+    "hash" : "1170978422",
+    "id" : "399DFB6B",
     "lastKnownWriteTime" : 1606847668,
     "last_content_update" : 1606847668,
-    "path" : "~/Documents/GitHub/fastnet/R/histo.dist.R",
+    "path" : "~/Documents/GitHub/fastnet/R/net.barabasi.albert.R",
     "project_path" : null,
     "properties" : {
-        "cursorPosition" : "17,0",
-        "scrollLine" : "0"
+        "cursorPosition" : "138,0",
+        "scrollLine" : "3"
     },
     "read_only" : false,
     "read_only_alternatives" : [
     ],
-    "relative_order" : 5,
+    "relative_order" : 6,
     "source_on_save" : false,
     "source_window" : "",
     "type" : "r_source"

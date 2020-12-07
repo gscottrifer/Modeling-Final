@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1607017714234.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "A7C385A",
+    "lastKnownWriteTime" : 7161113899375882868,
+    "last_content_update" : 1607017714234,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "A17BDD7D",
+        "caption" : "connection_matrix",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=connection_matrix&cache_key=A17BDD7D",
+        "displayedObservations" : "50",
+        "environment" : "",
+        "expression" : "connection_matrix",
+        "object" : "connection_matrix",
+        "preview" : "0",
+        "totalObservations" : "50",
+        "variables" : "50"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

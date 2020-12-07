@@ -1,18 +1,18 @@
 {
     "collab_server" : "",
     "contents" : "",
-    "created" : 1606849208097.000,
+    "created" : 1607022182309.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1366447358",
-    "id" : "9B36354F",
+    "hash" : "0",
+    "id" : "E24BA3AE",
     "lastKnownWriteTime" : 1606847668,
     "last_content_update" : 1606847668,
-    "path" : "~/Documents/GitHub/fastnet/R/draw.degdist.cum.R",
+    "path" : "~/Documents/GitHub/fastnet/R/neighbors.R",
     "project_path" : null,
     "properties" : {
-        "cursorPosition" : "17,0",
+        "cursorPosition" : "19,0",
         "scrollLine" : "0"
     },
     "read_only" : false,
