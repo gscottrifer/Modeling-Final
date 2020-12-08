@@ -13,12 +13,16 @@ activation_values<-update.rule(activation_values)
 
 #creating network
 small.test.network <- net.barabasi.albert(10,2,detectCores(),FALSE) %>%
-  add_influencer(influencer.degree = 5)
+  add_influencer(influencer.degree =5, population=10)
 #visualizing network
 draw.net(small.test.network)
 #creating empty matrix and initializing with network structure
 connection.matrix.small.test<- initialize_matrix(matrix(,11,11),small.test.network,11)
 #creating empty matrix of activation values
-activation.vector.small.test<- rep(0,11)
+activation.vector.small.test<- rep(0,11) %>%
+  activate_influencer(population=10)
+#create vector for threshold and steepness
 
-activation.vector.small.test<-update.rule(activation.vector.small.test,small.test.network)
+activation.vector.small.test<-update.rule(activation.vector.small.test,connection.matrix.small.test, population=10)
+
+?make_graph()
