@@ -13,6 +13,9 @@ draw.net <- function(net) {
   
   net.ig <- igraph::as.directed(igraph::graph_from_adj_list(net))
   
+  deg <- degree(net.ig, mode="out")
+  V(net.ig)$size <- deg*5
+  
   graphics::plot(net.ig)
   
 }

@@ -32,13 +32,7 @@ small.test.data<-data.frame(activation.matrix.small.test) %>%
 
 
 
-##visualizing 
-small.test.graph<- ggplot(small.test.data, aes(x=cycle, y=Node, height=activation))+
-  geom_density_ridges()+
-  theme_ridges()+
-  theme(legend.position="none")
-
-small.test.graph
+##visualizing the activity data
 
 sparkline.test <- ggplot(small.test.data, aes(x=cycle, y=activation))+
   facet_grid(Node~ ., scales = "fixed")+
@@ -52,8 +46,10 @@ node.3.test.graph<- ggplot(subset(small.test.data, Node=="X3"), aes(x=cycle, y=a
 
 node.3.test.graph
 
+ridgeline.plot<- ggplot(small.test.data, aes(x=cycle, y=Node, height=activation))+
+  geom_ridgeline_gradient(scale=0.9)
 
-
+ridgeline.plot
 
 #writing generic functions for visualization
 plot.one.node<- function(activity.data, Node.2.plot) {
@@ -62,8 +58,8 @@ plot.one.node<- function(activity.data, Node.2.plot) {
 }
 
 
-plot.one.node(small.test.data, "X3")
-plot.one.node(small.test.data, "X7")
+plot.one.node(small.test.data, "X5")
+plot.one.node(small.test.data, "X8")
   
 sparkline.test
 
