@@ -8,7 +8,7 @@ library(ggridges)
 library(tidyr)
 library(ggraph)
 
-#copying over the draw net function for visualizing networks
+#copying over the draw net function for visualizing networks and modifying it slightly
 draw.net <- function(net) {
   
   net.ig <- igraph::as.directed(igraph::graph_from_adj_list(net))
@@ -16,7 +16,7 @@ draw.net <- function(net) {
   deg <- degree(net.ig, mode="out")
   V(net.ig)$size <- deg*5
   
-  graphics::plot(net.ig)
+  graphics::plot(net.ig, edge.arrow.size=.5, edge.curved=.2, arrow.mode="forward")
   
 }
 
@@ -67,9 +67,6 @@ activate_influencer<- function(activation_values, population) {
   activation_values[1,population+1]<- 1
   return(activation_values)
 }
-
-?list.append
-?sample
 
 
 #write function for update steps

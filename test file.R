@@ -1,15 +1,15 @@
 test.network.1 <- net.barabasi.albert(50,2, detectCores(), FALSE)%>%
-  add_influencer(influencer.degree = 15)
+  add_influencer(influencer.degree = 25, population=50)
 
-matrix.test.1 <- matrix(test.network.1,population,population)
+draw.net(test.network.1)
 
-connection.matrix.1 <- initialize_matrix(matrix.test.1, test.network.1, 50)
 
-activation_values <- rep(0,population)
+connection.matrix.test.1 <- initialize_matrix(matrix(,51,51),test.network.1,51)
 
-activation_values<-select_influencers(activation_values)
+activation.matrix.test.1<- matrix(0,cycles,51) %>%
+  activate_influencer(population=50) %>%
+  update.rule(.,connection.matrix=connection.matrix.test.1, population=50)
 
-activation_values<-update.rule(activation_values)
 
 #creating network
 small.test.network <- net.barabasi.albert(10,2,detectCores(),FALSE) %>%
@@ -47,7 +47,7 @@ node.3.test.graph<- ggplot(subset(small.test.data, Node=="X3"), aes(x=cycle, y=a
 node.3.test.graph
 
 ridgeline.plot<- ggplot(small.test.data, aes(x=cycle, y=Node, height=activation))+
-  geom_ridgeline_gradient(scale=0.9)
+  geom_ridgeline_gradient(scale=0.6)
 
 ridgeline.plot
 
