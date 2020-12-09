@@ -3,7 +3,10 @@ library(doParallel)
 library(igraph)
 library(rlist) 
 library(dplyr)
-
+library(ggplot2)
+library(ggridges)
+library(tidyr)
+library(ggraph)
 
 #copying over the draw net function for visualizing networks
 draw.net <- function(net) {
@@ -58,7 +61,7 @@ add_influencer<- function(network, influencer.degree, population) {
 
 
 activate_influencer<- function(activation_values, population) {
-  activation_values[population+1]<- 1
+  activation_values[1,population+1]<- 1
   return(activation_values)
 }
 
@@ -79,7 +82,7 @@ connection_weight <- 0.05
 
 #add another tool that models the decay of the process, decay current activation values before adding input
 update.rule<- function(activation_values, connection.matrix, population) {
-for(cycle in 1:cycles) {
+for(cycle in 2:cycles) {
   #this vector contains for each node what its total input is
   input.to.each.node <- rep(0,(population+1))
   #for each node determine its inputs and the activation of those nodes, then 
@@ -88,13 +91,14 @@ for(cycle in 1:cycles) {
     #this vector contains for each node all the individual inputs
     input.vector <- rep(0, population+1)
     for(input in 1:population+1){
-      input.vector[input]<-if_else(connection.matrix[node,input]==1,activation_values[input]*connection_weight,0)
+      ##add ifelse for first cycle
+      input.vector[input]<-if_else(connection.matrix[node,input]==1,activation_values[cycle-1,input]*connection_weight,0)
     }
     input.to.each.node[node]<- combination.rule(unlist(input.vector))
   }
   #add another dimension here to track activation over each cycle
-  activation_values<-activation_values+input.to.each.node
-  sapply(activation_values, combination.rule)
+  activation_values[cycle,]<-activation_values[cycle-1,]+input.to.each.node
+  sapply(activation_values[cycle,], combination.rule)
 }
   return(activation_values)
 }
@@ -113,3 +117,4 @@ combination.rule <- function(input.vector) {
 
 
 ?exp()
+
