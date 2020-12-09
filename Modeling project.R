@@ -80,19 +80,21 @@ connection_weight <- 0.05
 #add another tool that models the decay of the process, decay current activation values before adding input
 update.rule<- function(activation_values, connection.matrix, population) {
 for(cycle in 1:cycles) {
+  #this vector contains for each node what its total input is
   input.to.each.node <- rep(0,(population+1))
   #for each node determine its inputs and the activation of those nodes, then 
   #multiply by connection weight and sum using combination rule
   for(node in 1:(population+1)) {
+    #this vector contains for each node all the individual inputs
     input.vector <- rep(0, population+1)
     for(input in 1:population+1){
-      input.vector[node]<-if_else(connection.matrix[node,input]==1,activation_values[input]*connection_weight,0)
+      input.vector[input]<-if_else(connection.matrix[node,input]==1,activation_values[input]*connection_weight,0)
     }
-    input.vector<- sapply(input.vector, function(input.vector) {input.vector[input.vector!=0]})
     input.to.each.node[node]<- combination.rule(unlist(input.vector))
   }
   #add another dimension here to track activation over each cycle
   activation_values<-activation_values+input.to.each.node
+  sapply(activation_values, combination.rule)
 }
   return(activation_values)
 }
@@ -104,8 +106,8 @@ steepness<- 10
 combination.rule <- function(input.vector) {
   #if only one input use identity rule
   #else call alogistic combination
-  combined.input<- ((1/(1+exp(-threshold*sum(input.vector)-threshold)))-1/(1+exp(-threshold*steepness))*(1+exp(-threshold*steepness)))
-  return(combined.input)
+  combined.input<- (1/(1+exp(-steepness*(sum(input.vector)-threshold)))-(1/(1+exp(threshold*steepness))))*(1+exp(-threshold*steepness))
+  return(if_else(combined.input<0, 0, combined.input) )
 }
 
 

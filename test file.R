@@ -21,6 +21,7 @@ connection.matrix.small.test<- initialize_matrix(matrix(,11,11),small.test.netwo
 #creating empty matrix of activation values
 activation.vector.small.test<- rep(0,11) %>%
   activate_influencer(population=10)
+
 #create vector for threshold and steepness
 
 activation.vector.small.test<-update.rule(activation.vector.small.test,connection.matrix.small.test, population=10)
