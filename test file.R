@@ -9,9 +9,13 @@ large.activation.matrix<- matrix(0,cycles,101) %>%
   activate_influencer(population=100) %>%
   update.rule(.,connection.matrix.large.test, population = 100)
 
+large.test.data<-data.frame(large.activation.matrix) %>%
+  gather(key="Node", value= "activation") %>%
+  cbind.data.frame(cycle=rep(seq(1:100),101))
+
 new.actions.each.cycle.plot(large.activation.matrix, 100)
 global.activity.plot(large.activation.matrix, 100)
-
+plot.by.degree(large.test.data, connection.matrix.large.test, population=100)
 
 
 test.network.1 <- net.barabasi.albert(50,2, detectCores(), FALSE)%>%

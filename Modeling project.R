@@ -24,9 +24,9 @@ cycles <- 100
 connection_weight <- 0.05
 
 #global threshold
-global.threshold<-0:100
+global.threshold<-50:50
 
-global.steepness<-80:100
+global.steepness<-150:150
 
 threshold.for.action<- 1.0
 
@@ -162,7 +162,7 @@ plot.all.activity<- function(activity.data) {
 }
 
 #plot activity by degree
-plot.by.degree<- function(activity.data, connection.matrix) {
+plot.by.degree<- function(activity.data, connection.matrix, population) {
   degree.vector <-vector(length=(population+1))
   for(i in 1:(population+1)){
     connection.vector <- as.vector(connection.matrix[i,])
