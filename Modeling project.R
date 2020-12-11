@@ -4,8 +4,11 @@ library(igraph)
 library(rlist) 
 library(dplyr)
 library(ggplot2)
-library(ggridges)
 library(tidyr)
+library(viridis)
+
+
+library(ggridges)
 library(ggraph)
 library(stringr)
 library(wesanderson)
@@ -24,13 +27,7 @@ cycles <- 100
 connection_weight <- 0.5
 
 #global threshold
-global.threshold<-50:50
 
-global.steepness<-10:10
-
-threshold.for.action<- 0.9
-
-decay.rate<- 0.9
 
 #copying over the draw net function for visualizing networks and modifying it slightly
 draw.net <- function(net) {
@@ -48,12 +45,30 @@ draw.net.large.network<- function(net, influencer) {
   
   net.ig <- igraph::as.directed(igraph::graph_from_adj_list(net))
   
+  dist.from.influencer<- distances(net.ig,v=V(net.ig)[influencer], to=V(net.ig))
+  oranges <- colorRampPalette(c("dark red", "gold"))
+  col <- oranges(max(dist.from.influencer)+1)
+  col <- col[dist.from.influencer+1]
+  
+  
   deg <- degree(net.ig, mode="out")
-  V(net.ig)$size <- deg*1
-#  l <- layout.kamada.kawai(net.ig)
-  l<-layout_with_lgl(net.ig, root=influencer)
-  l <- layout.norm(l, ymin=-1.3, ymax=1.3, xmin=-1.3, xmax=1.3)
-  graphics::plot(net.ig, edge.arrow.size=.2, edge.curved=.2, arrow.mode="forward", rescale=F,layout=l*1.0)
+  V(net.ig)$size <- (deg*1)+5
+  l<- layout_with_lgl(net.ig, root=influencer) %>%
+    layout.norm(l, ymin=-1.4, ymax=1.4, xmin=-1.4, xmax=1.4)
+  V(net.ig)$label<- 1:influencer
+  graphics::plot(net.ig, vertex.color=col, vertex.label.color="white",
+                 edge.arrow.size=.2, edge.curved=.2, arrow.mode="forward", rescale=F,layout=l*1.1,
+                 vertex.label=ifelse(degree(net.ig, mode="out")>(metric.degree.median(net.ig)*5), V(net.ig)$label, NA))
+  
+}
+
+
+#copying over the function that finds the median degree
+metric.degree.median <- function(g) {
+  
+  if (!is.list(g)) stop("Parameter 'g' must be a list",call. = FALSE)
+  
+  stats::median(lengths(g))
   
 }
 
@@ -209,8 +224,9 @@ new.actions.each.cycle.plot<- function(activation.matrix, population){
   
 }
 
-new.actions.each.cycle.plot(activation.matrix.test.1, 50)
-global.activity.plot(activation.matrix.test.1,50)
+
+
+
 
 
   

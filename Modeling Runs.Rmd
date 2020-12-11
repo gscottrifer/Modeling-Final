@@ -1,0 +1,146 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+
+#testing very variable threshold and steepness
+```{r}
+set.seed(123)
+
+global.threshold<-0:100
+
+global.steepness<-10:100
+
+threshold.for.action<- 0.9
+
+decay.rate<- 0.9
+
+test.network.2<- net.barabasi.albert(100,2, detectCores(), FALSE) %>%
+  add_influencer(influencer.degree=25, population=100)
+
+draw.net.large.network(test.network.2, influencer=101)
+
+test.2.connection.matrix<- initialize_matrix(matrix(,101,101), test.network.2, 101)
+
+test.2.activation.matrix<- matrix(0,cycles,101) %>%
+  activate_influencer(population=100) %>%
+  update.rule(.,test.2.connection.matrix, population = 100)
+
+test.2.data<- data.frame(test.2.activation.matrix) %>%
+  gather(key="Node", value= "activation") %>%
+  cbind.data.frame(cycle=rep(seq(1:100),101))
+
+new.actions.each.cycle.plot(test.2.activation.matrix, 100)
+plot.by.degree(test.2.data, test.2.connection.matrix, 100)
+
+
+```
+
+#testing uniform 
+```{r}
+set.seed(123)
+
+global.threshold<-50:50
+
+global.steepness<-10:10
+
+threshold.for.action<- 0.9
+
+decay.rate<- 0.9
+
+influencer.degree<- 25
+
+test.network.3<-net.barabasi.albert(100,2, detectCores(), FALSE) %>%
+  add_influencer(influencer.degree=influencer.degree, population=100)
+
+draw.net.large.network(test.network.3, influencer=101)
+
+test.3.connection.matrix<- initialize_matrix(matrix(,101,101), test.network.3, 101)
+
+test.3.activation.matrix<- matrix(0,cycles,101) %>%
+  activate_influencer(population=100) %>%
+  update.rule(.,test.3.connection.matrix, population = 100)
+
+test.3.data<- data.frame(test.3.activation.matrix) %>%
+  gather(key="Node", value= "activation") %>%
+  cbind.data.frame(cycle=rep(seq(1:100),101))
+
+new.actions.each.cycle.plot(test.3.activation.matrix, 100)
+plot.by.degree(test.3.data, test.3.connection.matrix, 100)
+
+```
+
+
+
+testing very high vs. low influencer degree
+high degree
+```{r}
+set.seed(123)
+
+global.threshold<-50:50
+
+global.steepness<-10:10
+
+threshold.for.action<- 0.9
+
+decay.rate<- 0.9
+
+influencer.degree<- 50
+
+test.network.4<-net.barabasi.albert(100,2, detectCores(), FALSE) %>%
+  add_influencer(influencer.degree=influencer.degree, population=100)
+
+draw.net.large.network(test.network.4, influencer=101)
+
+test.4.connection.matrix<- initialize_matrix(matrix(,101,101), test.network.4, 101)
+
+test.4.activation.matrix<- matrix(0,cycles,101) %>%
+  activate_influencer(population=100) %>%
+  update.rule(.,test.4.connection.matrix, population = 100)
+
+test.4.data<- data.frame(test.4.activation.matrix) %>%
+  gather(key="Node", value= "activation") %>%
+  cbind.data.frame(cycle=rep(seq(1:100),101))
+
+new.actions.each.cycle.plot(test.4.activation.matrix, 100)
+plot.by.degree(test.4.data, test.4.connection.matrix, 100)
+```
+
+
+#low degree
+```{r}
+set.seed(123)
+
+global.threshold<-50:50
+
+global.steepness<-10:10
+
+threshold.for.action<- 0.9
+
+decay.rate<- 0.9
+
+influencer.degree<- 10
+
+test.network.5<-net.barabasi.albert(100,2, detectCores(), FALSE) %>%
+  add_influencer(influencer.degree=influencer.degree, population=100)
+
+draw.net.large.network(test.network.5, influencer=101)
+
+test.5.connection.matrix<- initialize_matrix(matrix(,101,101), test.network.5, 101)
+
+test.5.activation.matrix<- matrix(0,cycles,101) %>%
+  activate_influencer(population=100) %>%
+  update.rule(.,test.5.connection.matrix, population = 100)
+
+test.5.data<- data.frame(test.5.activation.matrix) %>%
+  gather(key="Node", value= "activation") %>%
+  cbind.data.frame(cycle=rep(seq(1:100),101))
+
+new.actions.each.cycle.plot(test.5.activation.matrix, 100)
+plot.by.degree(test.5.data, test.5.connection.matrix, 100)
+```
