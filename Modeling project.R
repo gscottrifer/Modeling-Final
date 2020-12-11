@@ -8,6 +8,7 @@ library(ggridges)
 library(tidyr)
 library(ggraph)
 library(stringr)
+library(wesanderson)
 
 ?count
 
@@ -23,9 +24,11 @@ cycles <- 100
 connection_weight <- 0.05
 
 #global threshold
-global.threshold<-50:51
+global.threshold<-0:100
 
-global.steepness<-9:10
+global.steepness<-80:100
+
+threshold.for.action<- 1.0
 
 
 #copying over the draw net function for visualizing networks and modifying it slightly
@@ -40,13 +43,14 @@ draw.net <- function(net) {
   
 }
 
-draw.net.large.network<- function(net) {
+draw.net.large.network<- function(net, influencer) {
   
   net.ig <- igraph::as.directed(igraph::graph_from_adj_list(net))
   
   deg <- degree(net.ig, mode="out")
   V(net.ig)$size <- deg*1
-  l <- layout.kamada.kawai(net.ig)
+#  l <- layout.kamada.kawai(net.ig)
+  l<-layout_with_lgl(net.ig, root=influencer)
   l <- layout.norm(l, ymin=-1.3, ymax=1.3, xmin=-1.3, xmax=1.3)
   graphics::plot(net.ig, edge.arrow.size=.2, edge.curved=.2, arrow.mode="forward", rescale=F,layout=l*1.0)
   
@@ -137,4 +141,74 @@ combination.rule <- function(input.vector, threshold.vector, steepness.values,no
   return(if_else(combined.input<0, 0, combined.input) )
 }
 
+#writing functions for visualization
+plot.one.node<- function(activity.data, Node.2.plot) {
+  ggplot(subset(activity.data, Node==Node.2.plot), aes(x=cycle, y=activation, ymax=1.0))+
+    geom_line(color="darkred")
+}
 
+plot.multiple.nodes<- function(activity.data, Nodes.2.plot) {
+  filter(activity.data, Node %in% Nodes.2.plot) %>%
+    group_by(Node) %>%
+    ggplot(., aes(x=cycle, y=activation, ymax=1.0))+
+    geom_line(aes(color=Node))
+}
+
+
+#plot all activity 
+plot.all.activity<- function(activity.data) {
+  ggplot(activity.data, aes(x=cycle, y=activation, ymax=1.0))+
+    geom_line(aes(color=Node))
+}
+
+#plot activity by degree
+plot.by.degree<- function(activity.data, connection.matrix) {
+  degree.vector <-vector(length=(population+1))
+  for(i in 1:(population+1)){
+    connection.vector <- as.vector(connection.matrix[i,])
+    degree.vector[i]<- length(which(connection.vector==1))
+  }
+  activity.data %>%
+    cbind(in.degree=rep(degree.vector, each=cycles)) %>%
+    ggplot(., aes(x=cycle, y=activation, ymax=1.0))+
+    geom_line(aes(color=in.degree, line=Node)) +
+    scale_color_viridis(option="D")
+}
+
+#plot at each cycle how many nodes have reached a set "threshold" for action
+
+global.activity.plot<- function(activation.matrix, population){
+  action.count.vector<- rep(0, cycles)
+  for(i in 1:cycles) {
+    for(node in 1:(population+1)) {
+      action.count.vector[i]<- ifelse(activation.matrix[i,node]>=threshold.for.action, 
+                                   action.count.vector[i]+1,action.count.vector[i])
+    }
+  }
+  as.data.frame(action.count.vector) %>%
+    cbind.data.frame(cycle=rep(seq(1:cycles))) %>%
+    ggplot(., aes(x=cycle, y=action.count.vector))+
+    geom_line()
+  
+}
+
+new.actions.each.cycle.plot<- function(activation.matrix, population){
+  action.count.vector<- rep(0, cycles)
+  for(i in 2:cycles) {
+    for(node in 1:(population+1)) {
+      action.count.vector[i]<- ifelse(activation.matrix[i,node]>=threshold.for.action & activation.matrix[i-1,node]<threshold.for.action, 
+                                      action.count.vector[i]+1,action.count.vector[i])
+    }
+  }
+  as.data.frame(action.count.vector) %>%
+    cbind.data.frame(cycle=rep(seq(1:cycles))) %>%
+    ggplot(., aes(x=cycle, y=action.count.vector))+
+    geom_line()
+  
+}
+
+new.actions.each.cycle.plot(activation.matrix.test.1, 50)
+global.activity.plot(activation.matrix.test.1,50)
+
+
+  

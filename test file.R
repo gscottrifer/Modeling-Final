@@ -1,7 +1,23 @@
+very.large.test<- net.barabasi.albert(100,2, detectCores(), FALSE) %>%
+  add_influencer(influencer.degree=25, population=100)
+
+draw.net.large.network(very.large.test, influencer=101)
+
+connection.matrix.large.test<- initialize_matrix(matrix(,101,101), very.large.test, 101)
+
+large.activation.matrix<- matrix(0,cycles,101) %>%
+  activate_influencer(population=100) %>%
+  update.rule(.,connection.matrix.large.test, population = 100)
+
+new.actions.each.cycle.plot(large.activation.matrix, 100)
+global.activity.plot(large.activation.matrix, 100)
+
+
+
 test.network.1 <- net.barabasi.albert(50,2, detectCores(), FALSE)%>%
   add_influencer(influencer.degree = 25, population=50)
 
-draw.net.large.network(test.network.1)
+draw.net.large.network(test.network.1, influencer=51)
 
 
 connection.matrix.test.1 <- initialize_matrix(matrix(,51,51),test.network.1,51)
@@ -16,7 +32,9 @@ test.1.data<- data.frame(activation.matrix.test.1) %>%
   cbind.data.frame(cycle=rep(seq(1:100),51))
 
 plot.all.activity(test.1.data)
-plot.by.degree(test.1.data, test.network.1)
+plot.by.degree(test.1.data, connection.matrix.test.1)
+global.activity.plot(activation.matrix.test.1, 50)
+new.actions.each.cycle.plot(activation.matrix.test.1, 50)
 
 #creating network
 small.test.network <- net.barabasi.albert(10,2,detectCores(),FALSE) %>%
@@ -33,6 +51,7 @@ activation.matrix.small.test<- matrix(0,cycles,11) %>%
 
 
 activation.matrix.small.test<-update.rule(activation.matrix.small.test,connection.matrix.small.test, population=10)
+
 #tidying data set
 small.test.data<-data.frame(activation.matrix.small.test) %>%
   gather(key="Node", value= "activation") %>%
@@ -61,39 +80,6 @@ ridgeline.plot<- ggplot(test.1.data, aes(x=cycle, y=Node, height=activation))+
 
 ridgeline.plot
 
-#writing generic functions for visualization
-plot.one.node<- function(activity.data, Node.2.plot) {
-  ggplot(subset(activity.data, Node==Node.2.plot), aes(x=cycle, y=activation, ymax=1.0))+
-    geom_line(color="darkred")
-}
-
-plot.multiple.nodes<- function(activity.data, Nodes.2.plot) {
-  filter(activity.data, Node %in% Nodes.2.plot) %>%
-    group_by(Node) %>%
-    ggplot(., aes(x=cycle, y=activation, ymax=1.0))+
-    geom_line(aes(color=Node))
-}
-
-
-#plot all activity 
-plot.all.activity<- function(activity.data) {
-   ggplot(activity.data, aes(x=cycle, y=activation, ymax=1.0))+
-   geom_line(aes(color=Node))
-}
-
-#plot activity by degree
-plot.by.degree<- function(activity.data, connection.matrix) {
-  degree.vector <-vector(length=(population+1))
-  for(i in 1:(population+1)){
-    connection.vector <- as.vector(connection.matrix[i,])
-    degree.vector[i]<- length(which(connection.vector==1))
-  }
-  activity.data %>%
-  cbind(degree=rep(degree.vector, each=cycles)) %>%
-    ggplot(., aes(x=cycle, y=activation, ymax=1.0))+
-    geom_line(aes(color=degree, line=Node)) +
-    scale_color_viridis(option="C")
-}
 
 
 plot.by.degree(test.1.data, connection.matrix.test.1)
@@ -108,4 +94,4 @@ plot.one.node(small.test.data, "X8")
 sparkline.test
 
 
-?degree
+
