@@ -63,7 +63,9 @@ small.test.data<-data.frame(activation.matrix.small.test) %>%
   
 
 plot.all.activity(small.test.data)
-
+plot.by.degree(small.test.data, connection.matrix.small.test, 10)
+new.actions.each.cycle.plot(activation.matrix.small.test, 10)
+global.activity.plot(activation.matrix.small.test, 10)
 
 ##visualizing the activity data
 

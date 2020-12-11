@@ -21,15 +21,16 @@ m <- 2
 #parameter to control number of time steps model runs for
 cycles <- 100
 #controls how much each node influences its neighbors
-connection_weight <- 0.05
+connection_weight <- 0.5
 
 #global threshold
 global.threshold<-50:50
 
-global.steepness<-150:150
+global.steepness<-10:10
 
-threshold.for.action<- 1.0
+threshold.for.action<- 0.9
 
+decay.rate<- 0.9
 
 #copying over the draw net function for visualizing networks and modifying it slightly
 draw.net <- function(net) {
@@ -118,7 +119,7 @@ for(cycle in 2:cycles) {
     #creating vector for threshold
     thresholds<- (sample(global.threshold, population+1, replace=T)*0.01)
     steepness.values<- sample(global.steepness, population+1, replace=T)
-    input.to.each.node[node]<- combination.rule(unlist(input.vector), thresholds,steepness.values, node)
+    input.to.each.node[node]<- decay.rate*(combination.rule(unlist(input.vector), thresholds,steepness.values, node)-activation_values[cycle-1,node])
   }
   #add another dimension here to track activation over each cycle
   activation_values[cycle,]<-activation_values[cycle-1,]+input.to.each.node
@@ -196,7 +197,8 @@ new.actions.each.cycle.plot<- function(activation.matrix, population){
   action.count.vector<- rep(0, cycles)
   for(i in 2:cycles) {
     for(node in 1:(population+1)) {
-      action.count.vector[i]<- ifelse(activation.matrix[i,node]>=threshold.for.action & activation.matrix[i-1,node]<threshold.for.action, 
+      action.count.vector[i]<- ifelse(activation.matrix[i,node]>=threshold.for.action & 
+                                        all(activation.matrix[1:(i-1),node]<threshold.for.action), 
                                       action.count.vector[i]+1,action.count.vector[i])
     }
   }
