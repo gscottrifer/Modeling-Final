@@ -38,6 +38,7 @@ test.2.data<- data.frame(test.2.activation.matrix) %>%
 new.actions.each.cycle.plot(test.2.activation.matrix, 100)
 plot.by.degree(test.2.data, test.2.connection.matrix, 100)
 
+ridgeline.plot(test.2.data)
 
 ```
 
@@ -72,6 +73,7 @@ test.3.data<- data.frame(test.3.activation.matrix) %>%
 
 new.actions.each.cycle.plot(test.3.activation.matrix, 100)
 plot.by.degree(test.3.data, test.3.connection.matrix, 100)
+ridgeline.plot(test.3.data, c("X2","X49", "X42", "X101"))
 
 ```
 

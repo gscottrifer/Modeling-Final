@@ -225,7 +225,11 @@ new.actions.each.cycle.plot<- function(activation.matrix, population){
 }
 
 
-
+ridgeline.plot<- function(activity.data) {
+  ggplot(activity.data, aes(x=cycle, y=Node, height=activation, fill=stat(height)))+
+    geom_ridgeline_gradient(scale=0.8)+
+    scale_fill_viridis_c(name="Activation", option="C")
+}
 
 
 
