@@ -54,13 +54,16 @@ draw.net.large.network<- function(net, influencer) {
   deg <- degree(net.ig, mode="out")
   V(net.ig)$size <- (deg*1)+5
   l<- layout_with_lgl(net.ig, root=influencer) %>%
-    layout.norm(l, ymin=-1.4, ymax=1.4, xmin=-1.4, xmax=1.4)
+    layout.norm(l, ymin=-1, ymax=1, xmin=-1.5, xmax=1.5)
   V(net.ig)$label<- 1:influencer
   graphics::plot(net.ig, vertex.color=col, vertex.label.color="white",
-                 edge.arrow.size=.2, edge.curved=.2, arrow.mode="forward", rescale=F,layout=l*1.1,
+                 edge.arrow.size=.2, edge.curved=.2, arrow.mode="forward", rescale=F,layout=l*0.9,
                  vertex.label=ifelse(degree(net.ig, mode="out")>(metric.degree.median(net.ig)*5), V(net.ig)$label, NA))
   
+  legend("bottomleft", legend=levels(as.factor(dist.from.influencer)), fill=oranges(max(dist.from.influencer)+1), title="Distance from Influencer",
+         bty="n", title.col="black", xjust=0)
 }
+
 
 
 #copying over the function that finds the median degree
@@ -145,6 +148,42 @@ for(cycle in 2:cycles) {
 }
   return(activation_values)
 }
+
+#different version of update rule w/multiple influencer engagements
+multi.update.rule<- function(activation_values, connection.matrix, population, post.times) {
+  for(cycle in 2:cycles) {
+    #this vector contains for each node what its total input is
+    input.to.each.node <- rep(0,(population+1))
+    #for each node determine its inputs and the activation of those nodes, then 
+    #multiply by connection weight and sum using combination rule
+    for(node in 1:(population+1)) {
+      #this vector contains for each node all the individual inputs
+      input.vector <- rep(0, population+1)
+      for(input in 1:population+1){
+        ##add ifelse for first cycle
+        input.vector[input]<-if_else(connection.matrix[node,input]==1,activation_values[cycle-1,input]*connection_weight,0)
+      }
+      #creating vector for threshold
+      thresholds<- (sample(global.threshold, population+1, replace=T)*0.01)
+      steepness.values<- sample(global.steepness, population+1, replace=T)
+      input.to.each.node[node]<- decay.rate*(combination.rule(unlist(input.vector), thresholds,steepness.values, node)-activation_values[cycle-1,node])
+    }
+    #add another dimension here to track activation over each cycle
+    activation_values[cycle,]<-activation_values[cycle-1,]+input.to.each.node
+    #activity needs to be bounded between 0 and 1
+    for(i in 1:(population+1)) {
+      activation_values[cycle,i]<- ifelse(activation_values[cycle,i]>=1, 1, activation_values[cycle,i])
+    }
+    if(cycle%in%post.times) {
+      activation_values[cycle,(population+1)]<-1
+    }
+  }
+  return(activation_values)
+}
+
+
+
+
 
 
 #write the function for the combination of different inputs
