@@ -41,6 +41,7 @@ draw.net <- function(net) {
   
 }
 
+#modifying the draw net function to properly display large networks
 draw.net.large.network<- function(net, influencer) {
   
   net.ig <- igraph::as.directed(igraph::graph_from_adj_list(net))
@@ -54,14 +55,14 @@ draw.net.large.network<- function(net, influencer) {
   deg <- degree(net.ig, mode="out")
   V(net.ig)$size <- (deg*1)+5
   l<- layout_with_lgl(net.ig, root=influencer) %>%
-    layout.norm(l, ymin=-1, ymax=1, xmin=-1.5, xmax=1.5)
+    layout.norm(l, ymin=-0.8, ymax=0.8, xmin=-2, xmax=2)
   V(net.ig)$label<- 1:influencer
   graphics::plot(net.ig, vertex.color=col, vertex.label.color="white",
-                 edge.arrow.size=.2, edge.curved=.2, arrow.mode="forward", rescale=F,layout=l*0.9,
+                 edge.arrow.size=.2, edge.curved=.2, arrow.mode="forward", rescale=F,layout=l*1,
                  vertex.label=ifelse(degree(net.ig, mode="out")>(metric.degree.median(net.ig)*5), V(net.ig)$label, NA))
   
-  legend("bottomleft", legend=levels(as.factor(dist.from.influencer)), fill=oranges(max(dist.from.influencer)+1), title="Distance from Influencer",
-         bty="n", title.col="black", xjust=0)
+  legend("bottom", legend=levels(as.factor(dist.from.influencer)), fill=oranges(max(dist.from.influencer)+1), title="Distance from Influencer",
+         bty="n", title.col="black", xjust=0, horiz=T)
 }
 
 
@@ -110,7 +111,7 @@ add_influencer<- function(network, influencer.degree, population) {
 
 
 
-
+#the function to initially set the influencer node to active
 activate_influencer<- function(activation_values, population) {
   activation_values[1,population+1]<- 1
   return(activation_values)
@@ -120,7 +121,7 @@ activate_influencer<- function(activation_values, population) {
 
 
 
-#add another tool that models the decay of the process, decay current activation values before adding input
+#the function for the update rule
 update.rule<- function(activation_values, connection.matrix, population) {
 for(cycle in 2:cycles) {
   #this vector contains for each node what its total input is
@@ -186,7 +187,7 @@ multi.update.rule<- function(activation_values, connection.matrix, population, p
 
 
 
-#write the function for the combination of different inputs
+#write the function for the combination of different inputs using advanced logistic function
 combination.rule <- function(input.vector, threshold.vector, steepness.values,node) {
   if(length(input.vector)<=1) {
     combined.input<- (1/(1+exp(-steepness.values[node]*(input.vector-threshold.vector[node])))-(1/(1+exp(threshold.vector[node]*steepness.values[node]))))*(1+exp(-threshold.vector[node]*steepness.values[node]))
@@ -197,11 +198,13 @@ combination.rule <- function(input.vector, threshold.vector, steepness.values,no
 }
 
 #writing functions for visualization
+#plots activity of just one node
 plot.one.node<- function(activity.data, Node.2.plot) {
   ggplot(subset(activity.data, Node==Node.2.plot), aes(x=cycle, y=activation, ymax=1.0))+
     geom_line(color="darkred")
 }
 
+#plots multiple selected nodes
 plot.multiple.nodes<- function(activity.data, Nodes.2.plot) {
   filter(activity.data, Node %in% Nodes.2.plot) %>%
     group_by(Node) %>%
@@ -225,6 +228,7 @@ plot.by.degree<- function(activity.data, connection.matrix, population) {
   }
   activity.data %>%
     cbind(in.degree=rep(degree.vector, each=cycles)) %>%
+    head(.,-cycles) %>%
     ggplot(., aes(x=cycle, y=activation, ymax=1.0))+
     geom_line(aes(color=in.degree, line=Node)) +
     scale_color_viridis(option="D")
@@ -259,7 +263,8 @@ new.actions.each.cycle.plot<- function(activation.matrix, population){
   as.data.frame(action.count.vector) %>%
     cbind.data.frame(cycle=rep(seq(1:cycles))) %>%
     ggplot(., aes(x=cycle, y=action.count.vector))+
-    geom_line()
+    geom_line()+
+    labs(title="New Activations each Cycle", x="Cycle", y="Acitvated Nodes")
   
 }
 
